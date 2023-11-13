@@ -1,0 +1,13 @@
+spring:
+   datasource:   
+      db1:
+         driver-class-name: org.postgresql.Driver
+         jdbc-url: jdbc:postgresql://10.1.2.100:5432/obedm
+         username: apigen_grafana
+         password: yEwMEf28itFz4mw
+      db2:
+         driver-class-name: org.postgresql.Driver
+         jdbc-url: jdbc:postgresql://10.1.2.100:5432/bwmonitordb
+         username: guestuser
+         password: qfM39Lxs^eBYXQ
+      

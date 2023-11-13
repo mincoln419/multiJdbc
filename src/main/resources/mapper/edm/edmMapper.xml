@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ideatec.datamigration.obedm.dao.EdmMapper">
+	<select id="test" resultType="java.util.Map">
+	select TOI.order_number
+	  from t_order_item toi
+	 where toi.order_number ='23-00059108'
+	</select>
+</mapper>
+

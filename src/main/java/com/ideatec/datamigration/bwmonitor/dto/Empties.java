@@ -1,5 +1,9 @@
 package com.ideatec.datamigration.bwmonitor.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * <pre>
  * com.ideatec.datamigration.bwmonitor.dto
@@ -11,6 +15,10 @@ package com.ideatec.datamigration.bwmonitor.dto;
  * @desc    :
  * @version : x.x
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Empties {
 
+	private boolean hasEmpties;
 }

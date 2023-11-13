@@ -7,26 +7,17 @@ import lombok.NoArgsConstructor;
 /**
  * <pre>
  * com.ideatec.datamigration.bwmonitor.dto
- * PackageDto.java
+ * Vendor.java
  * </pre>
  *
  * @author  : minco
- * @date    : 2023. 11. 13. 오후 2:44:20
+ * @date    : 2023. 11. 13. 오후 3:13:11
  * @desc    :
  * @version : x.x
  */
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
-public class PackageDto {
-
-	private String packageId;
-
-	private Integer itemCount;
-
-	private String name;
-
-	private String pack;
-
-	private Integer unitCount;
+@AllArgsConstructor
+@NoArgsConstructor
+public class Vendor {
+	private String accountId;
 }

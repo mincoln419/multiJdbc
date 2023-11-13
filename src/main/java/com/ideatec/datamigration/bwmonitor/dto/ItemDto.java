@@ -40,7 +40,7 @@ public class ItemDto {
 
 	private Integer originalPrice;
 
-	@JsonProperty(namespace = "package")
+	@JsonProperty(value = "package")
 	private PackageDto package1;
 
 	private Integer price;
@@ -49,13 +49,13 @@ public class ItemDto {
 
 	private String sku;
 
-	private Integer subtootal;
+	private Integer subtotal;
 
 	private Integer tax;
 
 	private Integer total;
 
-	private Integer tototalExclChargestalEx;
+	private Integer totalExclCharges;
 
 	private String vendorItemId;
 

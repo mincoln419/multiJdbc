@@ -1,5 +1,8 @@
 package com.ideatec.datamigration.bwmonitor.dto;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -32,7 +35,25 @@ public class OrderDto {
 	private Integer extraEmptiesDiscountAmount;
 	private Interest interest;
 	private Integer interestAmount;
-	private List<ItemDto> items;
+	private List<ItemDto> items = new ArrayList<>();
+	private Integer itemsQuantity;
+	private Integer loanDeduction;
+	private String note;
+	private String orderNumber;
+	private Date placementDate;
+	private String previousStatus;
+
+	private String status;
+
+	private Integer subtotal;
+
+	private Integer tax;
+
+	private Integer total;
+
+	private Date updatedAt;
+
+	private Vendor vendor;
 
 
 

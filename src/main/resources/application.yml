@@ -11,3 +11,9 @@ spring:
          username: guestuser
          password: qfM39Lxs^eBYXQ
       
+logging:
+  level:
+    org.springframwork.web : debug
+    sql : off
+    jdbc : off
+    jdbc.sqlonly : debug

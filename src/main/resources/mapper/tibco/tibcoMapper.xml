@@ -2,9 +2,20 @@
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ideatec.datamigration.bwmonitor.dao.TibcoMapper">
 	<select id="test2" resultType="java.util.Map">
-	Select ETOD.ORDERNUMBER
-      From eai_trans_order_data etod
-     where etod.ordernumber in ('23-00056299')
+     Select ETOD.ORDERNUMBER
+       From eai_trans_order_data etod
+      where etod.ordernumber in ('23-00056299')
+	</select>
+
+	<select id="getTibcoOrder" parameterType="java.util.Map" resultType="java.util.Map">
+     select etod.ordernumber
+          , etod.item_sku, etod.package_name , etod.item_quantity, etod.datas
+       from PUBLIC.EAI_TRANS_ORDER_DATA ETOD
+      where etod.delivery_date = to_date(#{deliveryDate}, 'YYYY-MM-DD')
+        and etod.ws_id  = #{wsId}
+        and etod.proc_date >= now() - interval '5 day'
+        and etod.package_name like '%bottle%';
+
 	</select>
 </mapper>
 

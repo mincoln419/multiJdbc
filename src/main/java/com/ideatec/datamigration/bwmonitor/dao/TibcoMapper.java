@@ -18,4 +18,5 @@ public interface TibcoMapper {
 
 	public List<Map<String, Object>> test2();
 
+	public List<Map<String, Object>> getTibcoOrder(Map<String, Object> param);
 }

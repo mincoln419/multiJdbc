@@ -7,16 +7,19 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <pre>
@@ -29,6 +32,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @desc    :
  * @version : x.x
  */
+@Slf4j
+@Component
 public class PoiConfig {
 
 	public String filePath = "c:\\data-migration\\excl";
@@ -47,19 +52,19 @@ public class PoiConfig {
 
 		List<Map<String, Object>> list = new ArrayList<>();
 
-		Map<String, Object> testMap = new HashMap<>();
+		Map<String, Object> testMap = new LinkedHashMap<>();
 
 		testMap.put("ID", 1);
 		testMap.put("NAME", "cookie");
 		testMap.put("PHONE_NUMBER", "010-1111-2222");
 
-		Map<String, Object> testMap2 = new HashMap<>();
+		Map<String, Object> testMap2 = new LinkedHashMap<>();
 
 		testMap2.put("ID", 2);
 		testMap2.put("NAME", "bread");
 		testMap2.put("PHONE_NUMBER", "010-3333-4444");
 
-		Map<String, Object> testMap3 = new HashMap<>();
+		Map<String, Object> testMap3 = new LinkedHashMap<>();
 
 		testMap3.put("ID", 3);
 		testMap3.put("NAME", "tanghuroo");
@@ -71,9 +76,47 @@ public class PoiConfig {
 		config.generateExcl(List.of(data), "list1");
 
 		//list2 결과
-		List<Map<String, Object[]>> list2 = config.datMapping(List.of(testMap));
+		config.generateExclFromQuery(List.of(testMap, testMap2, testMap3), "list2");
+	}
 
-		config.generateExcl(list2, "list2");
+	public void generateExclFromQuery(List<Map<String, Object>> list, String fileNameAdd) {
+
+		if(list.size() == 0) {
+			log.info("처리할 데이터가 없습니다.");
+			return;
+		}
+		fileName = fileName + fileNameAdd + ".xlsx";
+		System.out.println(fileName);
+
+		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+			XSSFSheet sheet = workbook.createSheet("invoice" + getNowTime());
+			Set<String> keyset = list.get(0).keySet();
+
+			int rowNum = 0;
+			Row headRow =  sheet.createRow(rowNum++);
+			int cellNum = 0;
+			for (String key : keyset) {
+				drawCellByMap(key, headRow, cellNum++);
+			}
+
+			for(Map<String, Object> paramMap : list) {
+				Row row =  sheet.createRow(rowNum++);
+				cellNum = 0;
+				for (String key : keyset) {
+					drawCellByMap(paramMap.get(key), row, cellNum++);
+				}
+			}
+
+
+			try (FileOutputStream out = new FileOutputStream(new File(filePath, fileName))) {
+				workbook.write(out);
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -81,26 +124,23 @@ public class PoiConfig {
 	 * 1. 개요 :
 	 * 2. 처리내용 :
 	 * </pre>
-	 * @Method Name : datMapping
-	 * @date : 2023. 11. 13.
+	 * @Method Name : drawCellByMap
+	 * @date : 2023. 11. 14.
 	 * @author : minco
 	 * @history :
 	 * ----------------------------------------------------------------------------------
 	 * 변경일                        작성자                              변경내역
 	 * -------------- -------------- ----------------------------------------------------
-	 * 2023. 11. 13.  minco       최초작성
+	 * 2023. 11. 14.  minco       최초작성
 	 * ----------------------------------------------------------------------------------
 	 */
-	private List<Map<String, Object[]>> datMapping(List<Map<String, Object>> params) {
-
-		return params.stream().map(map -> {
-			Set<String> keyset = map.keySet();
-			Map<String, Object[]> data = new TreeMap<>();
-
-
-
-			return data;
-		}).collect(Collectors.toList());
+	private void drawCellByMap(Object obj, Row headRow, int cellNum) {
+		Cell cell = headRow.createCell(cellNum);
+		if (obj instanceof String) {
+			cell.setCellValue((String) obj);
+		} else if (obj instanceof Integer) {
+			cell.setCellValue((Integer) (obj));
+		}
 	}
 
 	/**

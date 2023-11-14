@@ -7,7 +7,7 @@
       where etod.ordernumber in ('23-00056299')
 	</select>
 
-	<select id="getTibcoOrder" parameterType="java.util.Map" resultType="java.util.Map">
+	<select id="getTibcoOrder" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
      select etod.ordernumber
           , etod.item_sku, etod.package_name , etod.item_quantity, etod.datas
        from PUBLIC.EAI_TRANS_ORDER_DATA ETOD

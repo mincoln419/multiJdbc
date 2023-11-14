@@ -24,7 +24,7 @@ public class DeliveryDto {
 
 	private boolean alternative;
 
-	private Date date;
+	private String date;
 
 	private String windowId;
 }

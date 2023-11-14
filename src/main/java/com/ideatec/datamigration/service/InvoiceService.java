@@ -72,7 +72,43 @@ public class InvoiceService {
 				e.printStackTrace();
 			}
 		}
-		poiConfig.generateExclFromQuery(parseList, "invoice_order");
+		poiConfig.generateExclFromQuery(parseList, "order_get_item_count");
+
+		return resultList;
+	}
+
+	public List<Map<String, Object>> orderInvoiceDataParser(Map<String, Object> param) {
+
+		List<Map<String, Object>> resultList = tibcoMapper.getTibcoOrder(param);
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		List<Map<String, Object>> parseList = new ArrayList<>();
+
+		for(Map<String, Object> map : resultList) {
+			try {
+				OrderDto order = objectMapper.readValue((String)map.get("datas"), OrderDto.class);
+
+				Map<String, Object> parseMap = getOrderMapping(order);
+				order.getItems().stream().forEach(item -> {
+
+					Map<String, Object> copyMap = getItemMapping(parseMap, item);
+					Map<String, Object> newParam = new HashMap<>();
+					newParam.putAll(param);
+					newParam.put("sku",item.getSku());
+					newParam.put("orderNumber",order.getOrderNumber());
+					Map<String, Object> edmMap = edmMapper.getInvoiceData(newParam);
+					copyMap.put("BRN", edmMap.get("brn"));
+					copyMap.put("EDM_Unity Qty", edmMap.get("unitQuantity")==null?0: ((BigDecimal) edmMap.get("unitQuantity")).intValue());
+					copyMap.put("EDM_Box Qty", edmMap.get("boxQuantity")==null?0: ((BigDecimal) edmMap.get("boxQuantity")).intValue());
+
+					parseList.add(copyMap);
+				});
+
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
+		}
+		poiConfig.generateExclFromQuery(parseList, "order_get_item_count");
 
 		return resultList;
 	}

@@ -4,10 +4,16 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ideatec.datamigration.obedm.dto.InvoiceDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <pre>
@@ -23,6 +29,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Slf4j
 public class OrderDto {
 	private String accountId;
 	private String channel;
@@ -56,5 +63,14 @@ public class OrderDto {
 	private Vendor vendor;
 
 
-
+	static public Optional<OrderDto> getOrderDtoByJson(String datas) {
+		ObjectMapper mapper = new ObjectMapper();
+		Optional<OrderDto> order = Optional.empty();
+		try {
+			order = Optional.of(mapper.readValue(datas, OrderDto.class));
+		} catch (JsonProcessingException e) {
+			log.error(e.getLocalizedMessage());
+		}
+		return order;
+	}
 }

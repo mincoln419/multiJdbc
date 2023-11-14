@@ -24,5 +24,11 @@
 	   and oi.order_number = #{orderNumber}
 	   and oi.vendor_item_id = #{sku}
 	</select>
+
+	<select id="getInvoiceData" resultType="com.ideatec.datamigration.util.CarmelHashMap" parameterType="java.util.Map">
+	select ti.datas
+	  from t_interface ti
+	 where ti.tx_id = 'KEDM00005_INVOICE_KSTA_0001_2023111316473133586omm91.002'
+	</select>
 </mapper>
 

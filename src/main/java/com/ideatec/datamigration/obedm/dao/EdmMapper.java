@@ -19,4 +19,6 @@ public interface EdmMapper {
 	public List<Map<String, Object>> test();
 
 	public Map<String, Object> getOrderData(Map<String, Object> param);
+
+	public Map<String, Object> getInvoiceData(Map<String, Object> param);
 }

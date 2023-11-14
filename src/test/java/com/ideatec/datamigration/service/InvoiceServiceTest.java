@@ -30,7 +30,7 @@ class InvoiceServiceTest {
 	void testTibcoOrderDataParser() {
 		Map<String, Object> param = new HashMap<>();
 		param.put("wsId", "6078118197");
-		param.put("deliveryDate", "2023-11-13");
+		param.put("deliveryDate", "2023-11-14");
 		invoiceService.tibcoOrderDataParser(param);
 	}
 

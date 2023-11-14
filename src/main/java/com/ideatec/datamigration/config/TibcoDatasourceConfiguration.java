@@ -13,6 +13,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.zaxxer.hikari.HikariDataSource;
@@ -40,11 +41,12 @@ public class TibcoDatasourceConfiguration {
 	}
 
 	@Bean(name = "db2SqlSessionFactory")
-	public SqlSessionFactory db2SqlSessionFactory(@Qualifier("db2DataSource") DataSource db2DataSource,
-			ApplicationContext applicationContext) throws Exception {
+	public SqlSessionFactory db2SqlSessionFactory(@Qualifier("db2DataSource") DataSource db2DataSource) throws Exception {
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 		sqlSessionFactoryBean.setDataSource(db2DataSource);
-		sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:mapper/tibco/*.xml"));
+		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+		sqlSessionFactoryBean.setMapperLocations(resolver.getResources("mapper/tibco/*.xml"));
+		sqlSessionFactoryBean.setConfigLocation(resolver.getResource("mapper/mybatis-config2.xml"));
 		return sqlSessionFactoryBean.getObject();
 	}
 

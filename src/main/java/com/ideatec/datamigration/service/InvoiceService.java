@@ -1,6 +1,8 @@
 package com.ideatec.datamigration.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +54,17 @@ public class InvoiceService {
 
 				Map<String, Object> parseMap = getOrderMapping(order);
 				order.getItems().stream().forEach(item -> {
+
 					Map<String, Object> copyMap = getItemMapping(parseMap, item);
+					Map<String, Object> newParam = new HashMap<>();
+					newParam.putAll(param);
+					newParam.put("sku",item.getSku());
+					newParam.put("orderNumber",order.getOrderNumber());
+					Map<String, Object> edmMap = edmMapper.getOrderData(newParam);
+					copyMap.put("BRN", edmMap.get("brn"));
+					copyMap.put("EDM_Unity Qty", edmMap.get("unitQuantity")==null?0: ((BigDecimal) edmMap.get("unitQuantity")).intValue());
+					copyMap.put("EDM_Box Qty", edmMap.get("boxQuantity")==null?0: ((BigDecimal) edmMap.get("boxQuantity")).intValue());
+
 					parseList.add(copyMap);
 				});
 
@@ -60,8 +72,6 @@ public class InvoiceService {
 				e.printStackTrace();
 			}
 		}
-
-
 		poiConfig.generateExclFromQuery(parseList, "invoice_order");
 
 		return resultList;

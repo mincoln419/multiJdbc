@@ -48,6 +48,7 @@ public class EdmDatasourceConfiguration {
 		sqlSessionFactoryBean.setDataSource(db1DataSource);
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 		sqlSessionFactoryBean.setMapperLocations(resolver.getResources("mapper/edm/*.xml"));
+		sqlSessionFactoryBean.setConfigLocation(resolver.getResource("mapper/mybatis-config.xml"));
 		return sqlSessionFactoryBean.getObject();
 	}
 

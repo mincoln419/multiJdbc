@@ -17,4 +17,6 @@ import java.util.Map;
 public interface EdmMapper {
 
 	public List<Map<String, Object>> test();
+
+	public Map<String, Object> getOrderData(Map<String, Object> param);
 }

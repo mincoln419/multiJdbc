@@ -32,7 +32,7 @@ dependencies {
 	implementation 'org.springframework.hateoas:spring-hateoas'
 	// https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml-schemas
 	implementation 'org.apache.poi:poi-ooxml:4.1.2'
-
+	implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre'
 
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

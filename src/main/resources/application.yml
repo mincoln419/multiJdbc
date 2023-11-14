@@ -2,12 +2,12 @@ spring:
    datasource:   
       db1:
          driver-class-name: org.postgresql.Driver
-         jdbc-url: jdbc:postgresql://10.1.2.100:5432/obedm
+         jdbc-url: jdbc:postgresql://10.1.2.100:5432/obedm?prepareThreshold=0
          username: apigen_grafana
          password: yEwMEf28itFz4mw
       db2:
          driver-class-name: org.postgresql.Driver
-         jdbc-url: jdbc:postgresql://10.1.2.100:5432/bwmonitordb
+         jdbc-url: jdbc:postgresql://10.1.2.100:5432/bwmonitordb?prepareThreshold=0
          username: guestuser
          password: qfM39Lxs^eBYXQ
       
@@ -17,3 +17,8 @@ logging:
     sql : off
     jdbc : off
     jdbc.sqlonly : debug
+    
+mybatis:
+  config-location: classpath:mapper/mybatis-config.xml
+  configuration:
+    map-underscore-to-camel-case: true

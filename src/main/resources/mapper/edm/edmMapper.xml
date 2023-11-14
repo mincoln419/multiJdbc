@@ -6,5 +6,23 @@
 	  from t_order_item toi
 	 where toi.order_number ='23-00059108'
 	</select>
+
+	<select id="getOrderData" resultType="com.ideatec.datamigration.util.CarmelHashMap" parameterType="java.util.Map">
+		select oi.order_number
+	     , oi.ws_id
+	     , oi.vendor_account_id
+	     , oi.vendor_item_id
+	     , oi.unit_quantity
+	     , oi.box_quantity
+	     , oi.delivery_date
+	     , ta.customer_account_id as brn
+	  from t_order_item oi
+	 inner join t_account ta
+	    on oi.vendor_account_id = ta.account_id
+	 where oi.ws_id = #{wsId}
+	   and oi.delivery_date = to_date(#{deliveryDate},'YYYY-MM-DD')
+	   and oi.order_number = #{orderNumber}
+	   and oi.vendor_item_id = #{sku}
+	</select>
 </mapper>
 

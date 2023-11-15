@@ -6,18 +6,22 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ideatec.datamigration.bwmonitor.dao.TibcoMapper;
 import com.ideatec.datamigration.bwmonitor.dto.ItemDto;
 import com.ideatec.datamigration.bwmonitor.dto.OrderDto;
 import com.ideatec.datamigration.obedm.dao.EdmMapper;
+import com.ideatec.datamigration.obedm.dto.ErpInvoiceDto;
 import com.ideatec.datamigration.util.PoiConfig;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <pre>
@@ -32,6 +36,7 @@ import lombok.AllArgsConstructor;
  */
 @Service
 @AllArgsConstructor
+@Slf4j
 public class InvoiceService {
 
 
@@ -160,5 +165,90 @@ public class InvoiceService {
 		copyMap.put("Pakcage ItemCount", item.getPackage1().getItemCount());
 		copyMap.put("Item Quantity", item.getQuantity());
 		return copyMap;
+	}
+
+	/**
+	 * <pre>
+	 * 1. 개요 :
+	 * 2. 처리내용 :
+	 * </pre>
+	 * @Method Name : orderInvoiceCompare
+	 * @date : 2023. 11. 15.
+	 * @author : minco
+	 * @history :
+	 * ----------------------------------------------------------------------------------
+	 * 변경일                        작성자                              변경내역
+	 * -------------- -------------- ----------------------------------------------------
+	 * 2023. 11. 15.  minco       최초작성
+	 * ----------------------------------------------------------------------------------
+	 */
+	public List<Map<String, Object>> orderInvoiceCompare(Map<String, Object> param, String datas) {
+		ErpInvoiceDto invoiceDto =   ErpInvoiceDto.getInvoiceDtoByJson(datas).get();
+
+		log.info("invoice:{}", invoiceDto);
+
+		param.put("wsId", "6078118197");
+		param.put("deliveryDate", "2023-11-13");
+		List<String> ordersList = tibcoMapper.getTibcoOrderForDto(param);
+		ObjectMapper mapper = new ObjectMapper();
+
+
+		List<OrderDto> orders = ordersList.stream().map(orderJson -> {
+			try {
+				return mapper.readValue(orderJson, OrderDto.class);
+			} catch (JsonMappingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}).collect(Collectors.toList());
+		log.info("orders:{}", orders.get(0).getOrderNumber());
+
+		List<Map<String, Object>> parseList = invoiceDto.getPayload()
+				.stream()
+				.map(invoice -> {
+			Map<String, Object> map = new LinkedHashMap<>();
+
+			orders.stream()
+			.filter(o -> o.getOrderNumber().equals(invoice.getOrderId()))
+			.forEach(o -> {
+					boolean flag = false;
+					for(ItemDto i : o.getItems()) {
+						if(i.getSku().equals(invoice.getSku())){
+							flag = true;
+							map.put("orderNumber", invoice.getOrderId());
+							map.put("order account Id", o.getVendor().getAccountId());
+							map.put("invoice account Id", invoice.getAccountId());
+							map.put("invoice sku", invoice.getSku());
+							map.put("invoice Unit Qty", invoice.getUnitQuantity());
+							map.put("invoice Box Qty", invoice.getBoxQuantity());
+							map.put("order sku", i.getSku());
+							map.put("order item package Name", i.getPackage1().getName());
+							map.put("order item quantity" , i.getQuantity());
+						}
+					}
+					if(!flag) {
+						map.put("orderNumber", invoice.getOrderId());
+						map.put("order account Id", o.getVendor().getAccountId());
+						map.put("invoice account Id", invoice.getAccountId());
+						map.put("invoice sku", invoice.getSku());
+						map.put("invoice Unit Qty", invoice.getUnitQuantity());
+						map.put("invoice Box Qty", invoice.getBoxQuantity());
+						map.put("order sku", "N/A");
+						map.put("order item package Name", "N/A");
+						map.put("order item quantity" , 0);
+					}
+
+			});
+			log.info("map:{}", map);
+			return map;
+
+		})
+		.filter(map -> map.size() > 0)
+		.collect(Collectors.toList());
+		return parseList;
 	}
 }

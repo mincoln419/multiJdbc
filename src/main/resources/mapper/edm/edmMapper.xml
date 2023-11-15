@@ -28,7 +28,7 @@
 	<select id="getInvoiceData" resultType="com.ideatec.datamigration.util.CarmelHashMap" parameterType="java.util.Map">
 	select ti.datas
 	  from t_interface ti
-	 where ti.tx_id = 'KEDM00005_INVOICE_KSTA_0001_2023111316473133586omm91.002'
+	 where ti.tx_id = 'KEDM00005_INVOICE_KSTA_0001_202311141656205ea78c1wm2'
 	</select>
 </mapper>
 

@@ -45,9 +45,6 @@ class InvoiceDtoTest {
 	private EdmMapper edmMapper;
 
 	@Autowired
-	private TibcoMapper tibcoMapper;
-
-	@Autowired
 	private InvoiceService invoiceService;
 
 

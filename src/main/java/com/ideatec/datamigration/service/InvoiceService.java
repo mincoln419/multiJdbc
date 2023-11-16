@@ -190,8 +190,6 @@ public class InvoiceService {
 
 		log.info("invoice:{}", invoiceDto);
 
-		param.put("wsId", "6078118197");
-		param.put("deliveryDate", "2023-11-13");
 		List<String> ordersList = tibcoMapper.getTibcoOrderForDto(param);
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -278,7 +276,6 @@ public class InvoiceService {
 			});
 			log.info("map:{}", map);
 			return map;
-
 		})
 		.filter(map -> map.size() > 0)
 		.collect(Collectors.toList());

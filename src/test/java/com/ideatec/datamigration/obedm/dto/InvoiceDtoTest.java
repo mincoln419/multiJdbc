@@ -58,6 +58,8 @@ class InvoiceDtoTest {
 	void invoice_interface_payload_test() throws JsonMappingException, JsonProcessingException {
 
 		Map<String, Object> param = new HashMap<>();
+		param.put("wsId", "6078118197");
+		param.put("deliveryDate", "2023-11-13");
 
 		Map<String, Object> result = edmMapper.getInvoiceData(param);
 

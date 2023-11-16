@@ -19,6 +19,7 @@ import com.ideatec.datamigration.bwmonitor.dto.OrderDto;
 import com.ideatec.datamigration.obedm.dao.EdmMapper;
 import com.ideatec.datamigration.obedm.dto.ErpInvoiceDto;
 import com.ideatec.datamigration.obedm.dto.InvoiceDto;
+import com.ideatec.datamigration.obedm.entity.AccountVo;
 import com.ideatec.datamigration.obedm.entity.ItemVo;
 import com.ideatec.datamigration.util.PoiConfig;
 
@@ -224,6 +225,9 @@ public class InvoiceService {
 			orders.stream()
 			.filter(o -> o.getOrderNumber().equals(invoice.getOrderId()))
 			.forEach(o -> {
+
+					param.put("accountId", invoice.getAccountId());
+					AccountVo accountVo = edmMapper.getAccountByWsAndId(param);
 					boolean flag = false;
 					for(ItemDto i : o.getItems()) {
 						if(i.getSku().equals(invoice.getSku())){
@@ -231,6 +235,7 @@ public class InvoiceService {
 							map.put("orderNumber", invoice.getOrderId());
 							map.put("order account Id", o.getVendor().getAccountId());
 							map.put("invoice account Id", invoice.getAccountId());
+							map.put("Account BRN", accountVo.getCustomerAccountId());
 							map.put("invoice sku", invoice.getSku());
 							map.put("invoice Unit Qty", invoice.getUnitQuantity());
 							map.put("invoice Box Qty", invoice.getBoxQuantity());
@@ -244,6 +249,7 @@ public class InvoiceService {
 						map.put("orderNumber", invoice.getOrderId());
 						map.put("order account Id", o.getVendor().getAccountId());
 						map.put("invoice account Id", invoice.getAccountId());
+						map.put("Account BRN", accountVo.getCustomerAccountId());
 						map.put("invoice sku", invoice.getSku());
 						map.put("invoice Unit Qty", invoice.getUnitQuantity());
 						map.put("invoice Box Qty", invoice.getBoxQuantity());

@@ -3,6 +3,7 @@ package com.ideatec.datamigration.obedm.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.ideatec.datamigration.obedm.entity.AccountVo;
 import com.ideatec.datamigration.obedm.entity.ItemVo;
 
 /**
@@ -27,4 +28,6 @@ public interface EdmMapper {
 	public List<Map<String, Object>> getInvoiceSendData(Map<String, Object> param);
 
 	public ItemVo getItemByWsAndSku(Map<String, Object> param);
+
+	public AccountVo getAccountByWsAndId(Map<String, Object> param);
 }

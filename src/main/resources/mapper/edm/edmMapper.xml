@@ -88,5 +88,40 @@ select ti.datas
 
 	</select>
 
+
+	<select id="getAccountByWsAndId" resultType="com.ideatec.datamigration.obedm.entity.AccountVo" parameterType="java.util.Map">
+	select
+		account_seq,
+		ws_id,
+		account_id,
+		insert_dtm,
+		update_dtm,
+		customer_account_id,
+		poc_name,
+		channel,
+		phone,
+		created_at,
+		zip_code,
+		address,
+		delivery_center_id,
+		delivery_schedule_id,
+		display_name,
+		has_empties_loan_yn,
+		liquor_license_number,
+		liquor_license_status,
+		liquor_license_expiration_dt,
+		sales_representative_name,
+		owner_name,
+		owner_phone,
+		owner_email,
+		item_price_id,
+		poc_status,
+		metadata,
+		sales_route
+	from
+		public.t_account ta
+	where ta.ws_id = #{wsId}
+	  and ta.account_id = #{accountId}
+	</select>
 </mapper>
 

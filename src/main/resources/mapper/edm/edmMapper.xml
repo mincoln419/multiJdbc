@@ -30,5 +30,63 @@
 	  from t_interface ti
 	 where ti.tx_id = 'KEDM00005_INVOICE_KSTA_0001_202311141656205ea78c1wm2'
 	</select>
+
+	<select id="getInvoiceSendData" resultType="com.ideatec.datamigration.util.CarmelHashMap" parameterType="java.util.Map">
+select ti.datas
+  from t_interface ti
+ where ti.parents_tx_id = 'KEDM00005_INVOICE_KSTA_0001_20231116113039216ddcxtu1'
+	</select>
+
+	<select id="getItemByWsAndSku" resultType="com.ideatec.datamigration.obedm.entity.ItemVo" parameterType="java.util.Map">
+ select item_seq,
+		ws_id,
+		vendor_item_id,
+		insert_dtm,
+		update_dtm,
+		item_name,
+		sku,
+		brand_id,
+		brand_name,
+		min_order_quantity,
+		is_alcoholic,
+		is_narcotic,
+		default_language,
+		manufacturer_id,
+		has_been_updated,
+		item_type,
+		uncategorized,
+		container_name,
+		container_size,
+		container_unit_of_measurement,
+		container_returnable,
+		container_material,
+		supplier_short_name,
+		country_of_origin,
+		upc,
+		upc_case,
+		upc_unit,
+		oz_per_case,
+		abv,
+		description,
+		hidden,
+		product_class,
+		purpose,
+		item_tax_type,
+		enabled,
+		package_id,
+		package_name,
+		package_count,
+		package_item_count,
+		package_pack,
+		package_size,
+		package_unit_of_measurement,
+		image,
+		vendor_category_id
+   from public.t_item ti
+  where ti.ws_id = #{wsId}
+    and ti.sku = #{sku}
+
+	</select>
+
 </mapper>
 

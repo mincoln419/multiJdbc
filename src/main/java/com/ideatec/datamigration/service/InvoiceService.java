@@ -18,6 +18,8 @@ import com.ideatec.datamigration.bwmonitor.dto.ItemDto;
 import com.ideatec.datamigration.bwmonitor.dto.OrderDto;
 import com.ideatec.datamigration.obedm.dao.EdmMapper;
 import com.ideatec.datamigration.obedm.dto.ErpInvoiceDto;
+import com.ideatec.datamigration.obedm.dto.InvoiceDto;
+import com.ideatec.datamigration.obedm.entity.ItemVo;
 import com.ideatec.datamigration.util.PoiConfig;
 
 import lombok.AllArgsConstructor;
@@ -207,6 +209,13 @@ public class InvoiceService {
 		}).collect(Collectors.toList());
 		log.info("orders:{}", orders.get(0).getOrderNumber());
 
+		List<InvoiceDto> invoices = edmMapper.getInvoiceSendData(param)
+				.stream()
+				.map(m -> {
+					return InvoiceDto.getInvoiceDtoByJson((String)m.get("datas")).get();
+				})
+				.collect(Collectors.toList());
+
 		List<Map<String, Object>> parseList = invoiceDto.getPayload()
 				.stream()
 				.map(invoice -> {
@@ -226,7 +235,8 @@ public class InvoiceService {
 							map.put("invoice Unit Qty", invoice.getUnitQuantity());
 							map.put("invoice Box Qty", invoice.getBoxQuantity());
 							map.put("order sku", i.getSku());
-							map.put("order item package Name", i.getPackage1().getName());
+							map.put("order package Name", i.getPackage1().getName());
+							map.put("order package item count", i.getPackage1().getItemCount());
 							map.put("order item quantity" , i.getQuantity());
 						}
 					}
@@ -238,10 +248,27 @@ public class InvoiceService {
 						map.put("invoice Unit Qty", invoice.getUnitQuantity());
 						map.put("invoice Box Qty", invoice.getBoxQuantity());
 						map.put("order sku", "N/A");
-						map.put("order item package Name", "N/A");
+						map.put("order package Name", "N/A");
+						map.put("order package item count", "N/A");
 						map.put("order item quantity" , 0);
 					}
+					map.put("invoice send Item Quantity", 0);
+					map.put("EDM package Name", "");
+					map.put("EDM package Item Count", 0);
+					invoices.stream()
+						.filter(send -> send.getPayload().getOrderId().equals(invoice.getOrderId()))
+						.forEach(send -> {
+								int itemQuantity = send.getPayload().getItems().stream()
+								.filter(item -> item.getVendorItemId().equals(invoice.getSku()))
+								.findFirst().get().getQuantity();
+								map.put("invoice send Item Quantity", itemQuantity);
 
+								param.put("sku", invoice.getSku());
+								ItemVo itemVo = edmMapper.getItemByWsAndSku(param);
+								map.put("EDM package Name", itemVo.getPackageName());
+								map.put("EDM package Item Count", itemVo.getPackageItemCount());
+							}
+						);
 			});
 			log.info("map:{}", map);
 			return map;

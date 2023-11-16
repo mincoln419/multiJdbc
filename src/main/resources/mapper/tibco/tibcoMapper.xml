@@ -24,7 +24,7 @@
        from PUBLIC.EAI_TRANS_ORDER_DATA ETOD
       where etod.delivery_date = to_date(#{deliveryDate}, 'YYYY-MM-DD')
         and etod.ws_id  = #{wsId}
-        and etod.proc_date >= now() - interval '5 day'
+        and etod.proc_date >= now() - interval '15 day'
         and etod.package_name like '%bottle%';
 	</select>
 </mapper>
